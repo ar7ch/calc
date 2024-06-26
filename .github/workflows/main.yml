@@ -1,0 +1,40 @@
+name: Building, testing, and static analysis pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ clang-tidy cppcheck
+
+      - name: Create build directory
+        run: mkdir -p build
+        working-directory: ${{ github.workspace }}
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+        working-directory: ${{ github.workspace }}
+
+      - name: Run clang-tidy
+        run: |
+          find src -name '*.cpp' | xargs -I {} clang-tidy -p build/ {} -- -I src
+        working-directory: ${{ github.workspace }}
+
+      - name: Run cppcheck
+        run: |
+          cppcheck --enable=all --inconclusive --std=c++20 --language=c++  --suppress=missingIncludeSystem --suppress=noExplicitConstructor src/
+        working-directory: ${{ github.workspace }}
+
+      - name: Build with CMake
+        run: cmake --build build
+        working-directory: ${{ github.workspace }}
+
+      - name: Run tests
+        run: cmake --build build --target run_tests
+        working-directory: ${{ github.workspace }}
