@@ -1,13 +1,17 @@
 #include <iostream>
 #include "lexer.hpp"
+#include "parser.hpp"
 
 int main()
 {
-	calc::Lexer lexer("1 + 2");
+	std::string input = "1 + 2";
+	calc::Lexer lexer(input);
 	auto tokens = lexer.tokenize();
+	calc::Parser parser{tokens};
+	parser.parse();
 
 	for (const auto& token : tokens) {
-		std::cout << token.text << std::endl;
+		std::cout << token.value << std::endl;
 	}
 
 	return 0;

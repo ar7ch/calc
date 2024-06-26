@@ -21,7 +21,6 @@ const std::unordered_map<char, Lexer::Token::TokenType> Lexer::char2tok = {
 };
 
 inline char Lexer::getchar() {
-	std::cout << "getchar pos = " << pos << std::endl;
     if (pos < expression.size()) {
 		return expression[pos++];
 	} else {

@@ -1,4 +1,4 @@
-#include "lexer.hpp"  // Include the lexer header file
+#include "lexer.hpp"
 #include <gtest/gtest.h>
 
 TEST(LexerTest, TokenizeSingleNumber) {
