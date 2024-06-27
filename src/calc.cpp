@@ -1,22 +1,14 @@
-#include <iostream>
-#include "lexer.hpp"
-#include "parser.hpp"
-#include "evaluator.hpp"
+#include "calc.hpp"
 
-int main()
-{
-	std::string input = "1 + 2";
-	calc::Lexer lexer(input);
-	auto tokens = lexer.tokenize();
-	calc::Parser parser{tokens};
-	auto ast = parser.parse();
+namespace calc {
 
-	for (const auto& token : tokens) {
-		std::cout << token.value << std::endl;
-	}
-	calc::Evaluator evaluator;
-	double result = evaluator.evaluate(ast.get());
-	std::cout << result << std::endl;
-
-	return 0;
+double Calculator::evaluate(const std::string& expression, const variable_map_t& variables) {
+    Lexer lexer(expression);
+    auto tokens = lexer.tokenize();
+    Parser parser(tokens);
+    auto ast = parser.parse();
+    Evaluator evaluator;
+    return evaluator.evaluate(ast.get(), variables);
 }
+
+} // namespace calc
