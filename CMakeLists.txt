@@ -8,6 +8,19 @@ add_library(parser_lib SHARED src/parser.cpp)
 add_library(calc_lib SHARED src/calc.cpp)
 target_link_libraries(calc_lib lexer_lib parser_lib evaluator_lib)
 
+# cli executable
+add_executable(calc_cli src/calc_cli.cpp)
+target_link_libraries(calc_cli calc_lib CLI11::CLI11)
+
+# Add CLI11
+include(FetchContent)
+FetchContent_Declare(
+    cli11
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+    GIT_TAG v2.4.2
+)
+FetchContent_MakeAvailable(cli11)
+
 # Add GoogleTest
 include(FetchContent)
 FetchContent_Declare(
