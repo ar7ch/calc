@@ -11,7 +11,7 @@ TEST(CalculatorTest, EvaluateSimpleExpression) {
 TEST(CalculatorTest, EvaluateWithVariables) {
     using namespace calc;
     Calculator calculator;
-    Calculator::variable_map_t variables = {{"x", 2}, {"y", 3}};
+    Calculator::raw_variable_map_t variables = {{"x", "2"}, {"y", "3"}};
     double result = calculator.evaluate("x * y + 1", variables);
 	EXPECT_EQ(result, 7);
 }

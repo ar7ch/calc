@@ -10,8 +10,8 @@ TEST(EvaluatorTest, EvaluateSingleNumber) {
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    double result = evaluator.evaluate(ast.get());
+    Evaluator evaluator{ast.get(), {}};
+    double result = evaluator.evaluate();
     EXPECT_EQ(result, 42);
 }
 
@@ -22,8 +22,8 @@ TEST(EvaluatorTest, EvaluateAddition) {
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    double result = evaluator.evaluate(ast.get());
+    Evaluator evaluator{ast.get(), {}};
+    double result = evaluator.evaluate();
     EXPECT_EQ(result, 3);
 }
 
@@ -34,8 +34,8 @@ TEST(EvaluatorTest, EvaluateMultiplication) {
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    double result = evaluator.evaluate(ast.get());
+    Evaluator evaluator{ast.get(), {}};
+    double result = evaluator.evaluate();
     EXPECT_EQ(result, 6);
 }
 
@@ -46,8 +46,8 @@ TEST(EvaluatorTest, EvaluateDivision) {
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    double result = evaluator.evaluate(ast.get());
+    Evaluator evaluator{ast.get(), {}};
+    double result = evaluator.evaluate();
     EXPECT_EQ(result, 3);
 }
 
@@ -58,8 +58,8 @@ TEST(EvaluatorTest, EvaluateFunction) {
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    double result = evaluator.evaluate(ast.get());
+    Evaluator evaluator{ast.get(), {}};
+    double result = evaluator.evaluate();
     EXPECT_EQ(result, 0);
 }
 
@@ -70,20 +70,47 @@ TEST(EvaluatorTest, EvaluateVariables) {
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    Evaluator::variable_map_t variables = {{"x", 3}, {"y", 4}};
-    double result = evaluator.evaluate(ast.get(), variables);
+    Evaluator::raw_variable_map_t raw_variables = {{"x", "3"}, {"y", "4"}};
+    Evaluator evaluator{ast.get(), raw_variables};
+    double result = evaluator.evaluate();
     EXPECT_EQ(result, 7);
 }
 
-TEST(EvaluatorTest, EvaluateComplexExpression) {
+TEST(EvaluatorTest, EvaluateVariableDependencies) {
     using namespace calc;
-    std::string input = "2 * (3 + 4) / {0.5 * 4}";
+    std::string input = "a + b";
     Lexer lexer{input};
     auto tokens = lexer.tokenize();
     Parser parser{tokens};
     auto ast = parser.parse();
-    Evaluator evaluator;
-    double result = evaluator.evaluate(ast.get());
-    EXPECT_EQ(result, 7);
+    Evaluator::raw_variable_map_t raw_variables = {{"a", "x"}, {"b", "y"}, {"x", "1"}, {"y", "2"}};
+    Evaluator evaluator{ast.get(), raw_variables};
+    double result = evaluator.evaluate();
+    EXPECT_EQ(result, 3);
 }
+
+// TEST(EvaluatorTest, EvaluateCyclicDependency) {
+//     using namespace calc;
+//     std::string input = "a + b";
+//     Lexer lexer{input};
+//     auto tokens = lexer.tokenize();
+//     Parser parser{tokens};
+//     auto ast = parser.parse();
+//     Evaluator::raw_variable_map_t raw_variables = {{"a", "b"}, {"b", "a"}};
+//     EXPECT_THROW(Evaluator evaluator{ast.get(), raw_variables};evaluator.evaluate(), std::runtime_error);
+// 	
+// }
+
+TEST(EvaluatorTest, EvaluateComplexExpressionWithVariables) {
+    using namespace calc;
+    std::string input = "2 * (x + 3) / y";
+    Lexer lexer{input};
+    auto tokens = lexer.tokenize();
+    Parser parser{tokens};
+    auto ast = parser.parse();
+    Evaluator::raw_variable_map_t raw_variables = {{"x", "5"}, {"y", "4"}};
+    Evaluator evaluator{ast.get(), raw_variables};
+    double result = evaluator.evaluate();
+    EXPECT_EQ(result, 4);
+}
+

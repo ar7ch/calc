@@ -17,7 +17,8 @@ const std::unordered_map<char, Lexer::Token::TokenType> Lexer::char2tok = {
     {'{', Token::TokenType::LPAREN_CURLY},
     {'}', Token::TokenType::RPAREN_CURLY},
     {'[', Token::TokenType::LPAREN_BRACE},
-    {']', Token::TokenType::RPAREN_BRACE}
+    {']', Token::TokenType::RPAREN_BRACE},
+    {'!', Token::TokenType::NEG}
 };
 
 inline char Lexer::getchar() {

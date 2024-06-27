@@ -9,9 +9,9 @@ namespace calc {
 
 class Calculator {
 public:
-    using variable_map_t = Evaluator::variable_map_t;
+    using raw_variable_map_t = Evaluator::raw_variable_map_t;
 
-    static double evaluate(const std::string& expression, const variable_map_t& variables = {});
+    static double evaluate(const std::string& expression, const raw_variable_map_t& variables = {});
 };
 
 } // namespace calc
