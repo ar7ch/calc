@@ -12,8 +12,8 @@ public:
     double evaluate(const Parser::AST* node, const variable_map_t& variables = {});
 
 private:
-    double evaluate_number(const Parser::Number* node);
-    double evaluate_variable(const Parser::Variable* node, const variable_map_t& variables);
+    static double evaluate_number(const Parser::Number* node);
+    static double evaluate_variable(const Parser::Variable* node, const variable_map_t& variables);
     double evaluate_function(const Parser::Function* node, const variable_map_t& variables);
     double evaluate_binary_op(const Parser::BinaryOp* node, const variable_map_t& variables);
 };
