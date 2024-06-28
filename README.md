@@ -12,10 +12,15 @@ The calculator can be extended by adding new operators, functions, and variables
 
 ## Features
 
-- Supports basic arithmetic operations: addition, subtraction, multiplication, division.
-- Supports parentheses for grouping: `()`, `{}`, `[]`.
-- Supports functions: `sin`, `cos`, `tan`, `log`.
+- Supports basic arithmetic operations: addition, subtraction, multiplication, division;
+- Supports parentheses for grouping: `()`, `{}`, `[]`;
+- Supports functions: `sin`, `cos`, `tan`, `log`;
 - Supports variable substitution.
+
+## Limitations
+
+- The calculator does not support expressions with variables in the function arguments;
+- In parsing errors, the calculator does not provide detailed information about the error location.
 
 ## Prerequisites
 
@@ -35,8 +40,8 @@ You can:
 
 Limitations of Docker do not allow passing quoted arguments to the container (at list without ugly escaping), so you can invoke calculator from the container shell:
 ```sh
-    calc_cli -h
-    calc -h # docker version has this symlink
+$ calc_cli -h
+$ calc -h # docker version has this symlink
 ```
 
 ### Building Natively
@@ -106,33 +111,9 @@ To add a new operator, follow these steps:
 
 1. **Modify the Lexer:**
    - Update the `char2tok` map in [lexer.cpp](src/lexer.cpp) to include the new operator.
-   ```cpp
-   const std::unordered_map<char, Lexer::Token::TokenType> Lexer::char2tok = {
-       {'+', Token::TokenType::PLUS},
-       {'-', Token::TokenType::MINUS},
-       {'*', Token::TokenType::MUL},
-       {'/', Token::TokenType::DIV},
-       {'^', Token::TokenType::POW},  // Example: adding the power operator
-       // Add new operators here
-   };
-   ```
 
 2. **Update the Parser:**
    - According to grammar described in [parser.hpp](src/parser.hpp), modify the `parse_expression`, `parse_term`, and `parse_factor` functions in `parser.cpp` to handle the new operator.
-   ```cpp
-   std::unique_ptr<Parser::AST> Parser::parse_term() {
-       auto left = parse_factor();
-       while (getTokenType() == Lexer::Token::TokenType::MUL ||
-              getTokenType() == Lexer::Token::TokenType::DIV ||
-              getTokenType() == Lexer::Token::TokenType::POW) {  // Handle the new operator
-           auto op = getTokenType();
-           advance();
-           auto right = parse_factor();
-           left = std::make_unique<BinaryOp>(std::move(left), std::move(right), op);
-       }
-       return left;
-   }
-   ```
 
 3. **Update the Evaluator:**
    - Extend the `evaluate_*` function in [evaluator.cpp](src/evaluator.cpp) to perform the operation.
