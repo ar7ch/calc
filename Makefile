@@ -14,7 +14,7 @@ tests: cmake
 calc_cli_only: cmake
 	cmake --build build --target calc_cli
 
-calc_cli: analyze calc_cli_only
+calc_cli: check calc_cli_only
 
 cppcheck: cmake
 	cppcheck --enable=all --inconclusive --std=c++20 --language=c++  \
