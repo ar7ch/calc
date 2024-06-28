@@ -25,7 +25,7 @@ The calculator can be extended by adding new operators, functions, and variables
 ## Prerequisites
 
 - CMake (version 3.10 or higher)
-- g++
+- g++ (version 13 or higher)
 
 ## Getting Started
 
@@ -38,7 +38,7 @@ You can:
     docker run -it ar7ch/calc
     ```
 
-Limitations of Docker do not allow passing quoted arguments to the container (at list without ugly escaping), so you can invoke calculator from the container shell:
+Limitations of Docker do not allow passing quoted arguments to the container (at least without ugly escaping), so you can invoke calculator from the container shell:
 ```sh
 $ calc_cli -h
 $ calc -h # docker version has this symlink
