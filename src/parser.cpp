@@ -32,7 +32,11 @@ void Parser::expect(Lexer::Token::TokenType type) {
 }
 
 std::unique_ptr<Parser::AST> Parser::parse() {
-    return parse_expression();
+	auto expr = parse_expression();
+	if (getTokenType() != Lexer::Token::TokenType::END) {
+		throw std::runtime_error("Unexpected token after complete expression");
+	}
+	return expr;
 }
 
 std::unique_ptr<Parser::AST> Parser::parse_expression() {
